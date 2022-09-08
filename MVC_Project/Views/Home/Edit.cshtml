@@ -1,0 +1,157 @@
+﻿@model MVC_Project.Models.Team
+<div class="container">
+    <div class="master">
+        <h2>Team Details</h2>
+        <table class="table table-responsive">
+            <tr>
+                <td>Team Name</td>
+            </tr>
+            <tr>
+                <td>
+                    <input type="text" id="TeamId" value="@Model.TeamId" class="hidden" />
+                    <input type="text" id="TeamName" value="@Model.Name" class="form-control" />
+                    <span class="error">Team name is required</span>
+                </td>
+            </tr>
+            <tr>
+                <td>Description</td>
+            </tr>
+            <tr>
+                <td>
+                    <textarea id="Description" class="form-control">@Model.Description</textarea>
+                    <span class="error">Description is required</span>
+
+                </td>
+            </tr>
+
+        </table>
+    </div>
+    <div class="details">
+        <h2>
+            Team Member
+        </h2>
+        <table class="table table-responsive">
+            <tr>
+                <td>Name</td>
+                <td>Gender</td>
+                <td>Date of Birth</td>
+                <td>Contact No</td>
+                <td>&nbsp;</td>
+            </tr>
+            <tr class="mycontainer" id="mainrow">
+                <td>
+                    <input type="text" id="Name" class="name form-control" />
+                    <span class="error">Name is required</span>
+                </td>
+                <td>
+                    <select id="drpGender" class="gender form-control">
+                        <option selected>Select</option>
+                        <option>Male</option>
+                        <option>Female</option>
+                    </select>
+                    <span class="error">Select Gender</span>
+                </td>
+                <td>
+                    <input type="text" id="DOB" class=" dob form-control" />
+                    <span class="error">Date of birth is required</span>
+                </td>
+                <td>
+                    <input type="text" id="ContactNo" class="contactno form-control" />
+                    <span class="error">Contact no is required</span>
+                </td>
+                <td>
+                    <input type="button" id="add" value="add" style="width:80px" class="btn btn-success" />
+                </td>
+            </tr>
+        </table>
+        <div id="orderItems">
+            <table class="table table-responsive" id="addNewMember">
+                <tbody>
+                    @foreach (var item in Model.TeamMembers)
+                    {
+                        <tr class="mycontainer">
+                            <td>
+                                <input type="text" value="@item.MemberName" class="name form-control">
+
+                            </td>
+                            <td>
+                                <select class="gender form-control">
+                                    <option>Select</option>
+                                    @if (item.Gender == "Male")
+                                    {
+                                        <option selected>Male</option>
+
+                                    }
+                                    else
+                                    {
+                                        <option>Male</option>
+
+                                    }
+                                    @if (item.Gender == "Female")
+                                    {
+                                        <option selected>Female</option>
+
+                                    }
+                                    else
+                                    {
+                                        <option>Female</option>
+
+                                    }
+                                </select>
+
+                            </td>
+                            <td>
+                                <input type="text" value="@item.DOB.ToString("dd-MM-yy")" class="dob form-control hasDatepicker">
+
+                            </td>
+                            <td>
+                                <input type="text" value="@item.ContactNo" class="contactno form-control">
+
+                            </td>
+                            <td>
+                                <input type="button" value="Remove" style="width:80px" class="btn remove btn-danger">
+                            </td>
+                        </tr>
+                    }
+
+                </tbody>
+
+            </table>
+            <span id="addNewMemberError" style="color:red"></span>
+        </div>
+        <div style="padding:10px 0; text-align:right">
+            <input id="exit" type="button" value="Exit" class="btn btn-warning" style="padding:10px 20px" />
+            <input id="update" type="button" value="Update" class="btn btn-success" style="padding:10px 20px" />
+        </div>
+    </div>
+</div>
+
+<link href="~/Content/bootstrap.min.css" rel="stylesheet" />
+<link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css" />
+<style>
+
+    span.error {
+        display: block;
+        visibility: hidden;
+        color: red;
+        font-size: 90%;
+    }
+
+    tr.error {
+        background-color: rgba(255,0,0,0.35);
+    }
+</style>
+
+@section scripts
+{
+    <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+    <script src="~/Scripts/TeamCreateScript.js"></script>
+
+    <script type="text/javascript">
+        $(function () {
+            $('#DOB').datepicker({
+                dateFormat: "dd-mm-yy"
+            });
+        });
+    </script>
+}

@@ -1,0 +1,173 @@
+﻿@model IList<MVC_Project.Models.Team>
+<div class="container">
+    <div class="details">
+        <table class="table table-responsive">
+            <tr>
+                <th>Team Status</th>
+                <th colspan="3"><a href="/Home/Create">New Team</a></th>
+            </tr>
+            <tr>
+                <th>Team Name</th>
+                <th>Approved By Manager</th>
+                <th>Approved By Director</th>
+                <th></th>
+            </tr>
+            @foreach (var item in Model)
+            {
+                <tr class="mycontainer" id="mainrow">
+                    <td>
+                        @item.Name
+                    </td>
+                    <td>
+                        @{
+                            var htmlCodeForManager = "";
+                            if (item.IsApprovedByManager == true)
+                            {
+                                htmlCodeForManager = "✅";
+                            }
+                            else if (item.IsApprovedByManager == false)
+                            {
+                                htmlCodeForManager = "❌";
+                            }
+                            else
+                            {
+                                htmlCodeForManager = "◯";
+                            }
+                        }
+                        <input title="this is a tri-state button: &#x25ef;,&#x2705;,&#x274C;" type="button" onclick="ApprovedByManagerStatus(this, @item.TeamId,true)"  value="@htmlCodeForManager" />
+                    </td>
+                    <td>
+                        @{
+                            var htmlCodeForDirector = "";
+                            if (item.IsApprovedByDirector == true)
+                            {
+                                htmlCodeForDirector = "✅";
+                            }
+                            else if (item.IsApprovedByDirector == false)
+                            {
+                                htmlCodeForDirector = "❌";
+                            }
+                            else
+                            {
+                                htmlCodeForDirector = "◯";
+                            }
+                        }
+                        <input title="this is a tri-state button: &#x25ef;,&#x2705;,&#x274C;" type="button" onclick="ApprovedByDirectorStatus(this, @item.TeamId,false)" value="@htmlCodeForDirector" />
+                    </td>
+                    <td>
+                        <a href="/Home/Edit/@item.TeamId">Edit</a> | <a onclick="DeleteTeam(@item.TeamId)">Delete</a>
+                    </td>
+                </tr>
+            }
+        </table>
+    </div>
+</div>
+
+<link href="~/Content/bootstrap.min.css" rel="stylesheet" />
+<link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css" />
+<style>
+
+    span.error {
+        display: block;
+        visibility: hidden;
+        color: red;
+        font-size: 90%;
+    }
+
+    tr.error {
+        background-color: rgba(255,0,0,0.35);
+    }
+</style>
+
+@section scripts
+{
+    <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+    <script>
+        function ApprovedByManagerStatus(control, teamId, isManager) {
+            tristate(control, '\u25ef', '\u2705', '\u274C');
+            var ApproveStatus = {};
+            ApproveStatus.TeamId = teamId;
+            ApproveStatus.IsManager = isManager;
+            if (control.value == "◯") {
+                ApproveStatus.IsApprovedByManager = null;
+            };
+            if (control.value == "❌") {
+                ApproveStatus.IsApprovedByManager = false;
+            };
+            if (control.value == "✅") {
+                ApproveStatus.IsApprovedByManager = true;
+            };
+            ApproveStatusUpdate(ApproveStatus)
+        }
+        function ApprovedByDirectorStatus(control, teamId, isManager) {
+            tristate(control, '\u25ef', '\u2705', '\u274C');
+            var ApproveStatus = {};
+            ApproveStatus.TeamId = teamId;
+            ApproveStatus.IsManager = isManager;
+            if (control.value == "◯") {
+                ApproveStatus.IsApprovedByDirector = null;
+            };
+            if (control.value == "❌") {
+                ApproveStatus.IsApprovedByDirector = false;
+            };
+            if (control.value == "✅") {
+                ApproveStatus.IsApprovedByDirector = true;
+            };
+            ApproveStatusUpdate(ApproveStatus)
+        }
+        function tristate(control, value1, value2, value3) {
+            switch (control.value.charAt(0)) {
+                case value1:
+                    control.value = value2;
+                    break;
+                case value2:
+                    control.value = value3;
+                    break;
+                case value3:
+                    control.value = value1;
+                    break;
+                default:
+                    // display the current value if it's unexpected
+                    alert(control.value);
+            }
+        }
+        function DeleteTeam(teamId) {
+            $.ajax({
+                type: 'POST',
+                url: '/Home/DeleteTeam?teamId=' + teamId,
+                success: function (data) {
+                    if (data.status) {
+                        toastr.success('Team delete successfully!');
+                        location.reload(true);
+                    }
+                    else {
+                        toastr.error('Something unexpected happened!');
+                    }
+                },
+                error: function (error) {
+                    console.log(error);
+                }
+            });
+
+        }
+        function ApproveStatusUpdate(ApproveStatus) {
+            $.ajax({
+                type: 'POST',
+                url: '/home/ApproveStatusUpdate',
+                data: ApproveStatus,
+                success: function (data) {
+                    if (data.status) {
+                        toastr.success('Approved status update successfully!');
+                    }
+                    else {
+                        toastr.error('Something unexpected happened!');
+                    }
+                },
+                error: function (error) {
+                    console.log(error);
+                }
+            });
+
+        }
+    </script>
+}

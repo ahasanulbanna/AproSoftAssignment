@@ -1,0 +1,48 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="AproDBModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+  <EntityType Name="TeamMember">
+    <Key>
+      <PropertyRef Name="TeamMemberId" />
+    </Key>
+    <Property Name="TeamMemberId" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="MemberName" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="Gender" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="DOB" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="ContactNo" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="TeamId" Type="Int64" Nullable="false" />
+    <NavigationProperty Name="Team" Relationship="Self.FK_dbo_TeamMembers_dbo_Teams_TeamId" FromRole="TeamMembers" ToRole="Teams" />
+  </EntityType>
+  <EntityType Name="Team">
+    <Key>
+      <PropertyRef Name="TeamId" />
+    </Key>
+    <Property Name="TeamId" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Name" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="Description" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="IsApprovedByManager" Type="Boolean" />
+    <Property Name="IsApprovedByDirector" Type="Boolean" />
+    <NavigationProperty Name="TeamMembers" Relationship="Self.FK_dbo_TeamMembers_dbo_Teams_TeamId" FromRole="Teams" ToRole="TeamMembers" />
+  </EntityType>
+  <Association Name="FK_dbo_TeamMembers_dbo_Teams_TeamId">
+    <End Role="Teams" Type="Self.Team" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="TeamMembers" Type="Self.TeamMember" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Teams">
+        <PropertyRef Name="TeamId" />
+      </Principal>
+      <Dependent Role="TeamMembers">
+        <PropertyRef Name="TeamId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityContainer Name="AproDBEntities" annotation:LazyLoadingEnabled="true">
+    <EntitySet Name="TeamMembers" EntityType="Self.TeamMember" />
+    <EntitySet Name="Teams" EntityType="Self.Team" />
+    <AssociationSet Name="FK_dbo_TeamMembers_dbo_Teams_TeamId" Association="Self.FK_dbo_TeamMembers_dbo_Teams_TeamId">
+      <End Role="Teams" EntitySet="Teams" />
+      <End Role="TeamMembers" EntitySet="TeamMembers" />
+    </AssociationSet>
+  </EntityContainer>
+</Schema>
