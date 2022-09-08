@@ -219,6 +219,10 @@
     <Compile Include="Migrations\202209072236415_InitialCreate.designer.cs">
       <DependentUpon>202209072236415_InitialCreate.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202209081204585_modifyteamentity.cs" />
+    <Compile Include="Migrations\202209081204585_modifyteamentity.designer.cs">
+      <DependentUpon>202209081204585_modifyteamentity.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\DataContext.cs" />
     <Compile Include="Models\Team.cs" />
@@ -263,6 +267,9 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\202209072236415_InitialCreate.resx">
       <DependentUpon>202209072236415_InitialCreate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202209081204585_modifyteamentity.resx">
+      <DependentUpon>202209081204585_modifyteamentity.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
